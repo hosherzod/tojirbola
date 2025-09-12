@@ -64,7 +64,13 @@
         tg.expand(); // Brauzer oynasini to‘ldirish
 
         // Botdan kelgan mahsulotlar
-        const products = JSON.parse(tg.initDataUnsafe.products || '[]');
+       // const products = JSON.parse(tg.initDataUnsafe.products || '[]');
+        if (!tg.initDataUnsafe.products) {
+            document.getElementById('products-grid').innerHTML = '<p>Hech qanday mahsulot yo‘q.</p>';
+        } else {
+            const products = JSON.parse(tg.initDataUnsafe.products);
+            // ... qolgan kodi
+        
 
         const grid = document.getElementById('products-grid');
 
@@ -98,7 +104,7 @@
             card.appendChild(price);
             card.appendChild(btn);
             grid.appendChild(card);
-        });
+        });}
     </script>
 </body>
 </html>
