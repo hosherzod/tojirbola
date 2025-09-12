@@ -1,11 +1,9 @@
-<!-- webapp/index.html -->
-
 <!DOCTYPE html>
 <html lang="uz">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mahsulotlardan oling</title>
+    <title>Mahsulotlar</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         body {
@@ -64,48 +62,46 @@
         tg.expand(); // Brauzer oynasini to‘ldirish
 
         // Botdan kelgan mahsulotlar
-       // const products = JSON.parse(tg.initDataUnsafe.products || '[]');
-        if (!tg.initDataUnsafe.products) {
-            document.getElementById('products-grid').innerHTML = '<p>Hech qanday mahsulot yo‘q.</p>';
-        } else {
-            const products = JSON.parse(tg.initDataUnsafe.products);
-            // ... qolgan kodi
-        
+        const products = JSON.parse(tg.initDataUnsafe.products || '[]');
 
         const grid = document.getElementById('products-grid');
 
-        products.forEach(product => {
-            const card = document.createElement('div');
-            card.className = 'card';
+        if (products.length === 0) {
+            grid.innerHTML = '<p>Hozircha mahsulotlar mavjud emas.</p>';
+        } else {
+            products.forEach(product => {
+                const card = document.createElement('div');
+                card.className = 'card';
 
-            const img = document.createElement('img');
-            img.src = product.photo_id ? `https://api.telegram.org/file/bot${tg.token}/${product.photo_path}` : 'https://via.placeholder.com/150';
+                const img = document.createElement('img');
+                img.src = product.photo_id ? `https://via.placeholder.com/150` : 'https://via.placeholder.com/150';
+                img.alt = product.name;
 
-            const title = document.createElement('h3');
-            title.textContent = product.name;
+                const title = document.createElement('h3');
+                title.textContent = product.name;
 
-            const price = document.createElement('div');
-            price.className = 'price';
-            price.textContent = `${product.price.toLocaleString()} so‘m`;
+                const price = document.createElement('div');
+                price.className = 'price';
+                price.textContent = `${product.price.toLocaleString()} so‘m`;
 
-            const btn = document.createElement('button');
-            btn.className = 'btn';
-            btn.textContent = '🛒 Buyurtma berish';
-            btn.onclick = () => {
-                tg.sendData(JSON.stringify({
-                    action: 'order',
-                    product_id: product.id
-                }));
-                tg.close(); // Web App ni yopish
-            };
+                const btn = document.createElement('button');
+                btn.className = 'btn';
+                btn.textContent = '🛒 Buyurtma berish';
+                btn.onclick = () => {
+                    tg.sendData(JSON.stringify({
+                        action: 'order',
+                        product_id: product.id
+                    }));
+                    tg.close(); // Web App ni yopish
+                };
 
-            card.appendChild(img);
-            card.appendChild(title);
-            card.appendChild(price);
-            card.appendChild(btn);
-            grid.appendChild(card);
-        });}
+                card.appendChild(img);
+                card.appendChild(title);
+                card.appendChild(price);
+                card.appendChild(btn);
+                grid.appendChild(card);
+            });
+        }
     </script>
 </body>
 </html>
-
